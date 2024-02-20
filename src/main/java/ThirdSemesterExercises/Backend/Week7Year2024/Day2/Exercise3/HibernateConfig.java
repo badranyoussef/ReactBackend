@@ -59,8 +59,41 @@ public class HibernateConfig {
         configuration.addAnnotatedClass(Point.class);
     }
 
-    public static EntityManagerFactory getEntityManagerFactoryConfig() {
+    private static EntityManagerFactory getEntityManagerFactoryConfig() {
         if (entityManagerFactory == null) entityManagerFactory = buildEntityFactoryConfig();
         return entityManagerFactory;
+    }
+
+    /////////////////////////////////////////////////
+
+    private static EntityManagerFactory getEntityManagerFactoryConfigTest() {
+        if (entityManagerFactory == null) entityManagerFactory = setupHibernateConfigurationForTesting();
+        return entityManagerFactory;
+    }
+
+    public static EntityManagerFactory getEntityManagerFactory(boolean isTest) {
+        if (isTest) getEntityManagerFactoryConfigTest();
+        return getEntityManagerFactoryConfig();
+    }
+
+    /////////////////////////////////////////////////
+
+    private static EntityManagerFactory setupHibernateConfigurationForTesting() {
+        try {
+            Configuration configuration = new Configuration();
+            Properties props = new Properties();
+            props.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
+            props.put("hibernate.connection.driver_class", "org.testcontainers.jdbc.ContainerDatabaseDriver");
+            props.put("hibernate.connection.url", "jdbc:tc:postgresql:15.3-alpine3.18:///test-db");
+            props.put("hibernate.connection.username", "postgres");
+            props.put("hibernate.connection.password", "postgres");
+            props.put("hibernate.archive.autodetection", "class");
+            props.put("hibernate.show_sql", "true");
+            props.put("hibernate.hbm2ddl.auto", "create-drop");
+            return getEntityManagerFactory(configuration, props);
+        } catch (Throwable ex) {
+            System.err.println("Initial SessionFactory creation failed." + ex);
+            throw new ExceptionInInitializerError(ex);
+        }
     }
 }

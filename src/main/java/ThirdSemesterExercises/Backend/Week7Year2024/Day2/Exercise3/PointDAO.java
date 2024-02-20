@@ -18,9 +18,18 @@ public class PointDAO {
     The method that retrieves all Points for example should return a list of all the points from the database.
     */
 
-    static EntityManagerFactory emf = HibernateConfig.getEntityManagerFactoryConfig();
+    private static EntityManagerFactory emf;
+    private static PointDAO instance;
 
-    public static int store1000Points() {
+    public static PointDAO getInstance(EntityManagerFactory _emf) {
+        if(instance == null) {
+            emf = _emf;
+            instance = new PointDAO();
+        }
+        return instance;
+    }
+
+    public int store1000Points() {
         try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
             for (int i = 0; i < 1000; i++) {
@@ -33,7 +42,7 @@ public class PointDAO {
     }
 
 
-    public static int numberOfPointObjects() {
+    public int numberOfPointObjects() {
         try (EntityManager em = emf.createEntityManager()) {
             Query q1 = em.createQuery("SELECT COUNT(p) FROM Point p");
             long count = (long) q1.getSingleResult();
@@ -41,14 +50,14 @@ public class PointDAO {
         }
     }
 
-    public static double findTheAverageX(int x) {
+    public double findTheAverageX(int x) {
         try (EntityManager em = emf.createEntityManager()) {
             Query q2 = em.createQuery("SELECT AVG(p.x) FROM Point p");
             return (double) q2.getSingleResult();
         }
     }
 
-    public static List<Point> retrieveAllThePointObjects() {
+    public List<Point> retrieveAllThePointObjects() {
         try (EntityManager em = emf.createEntityManager()) {
             TypedQuery<Point> query = em.createQuery("SELECT p FROM Point p", Point.class);
             List<Point> results = query.getResultList();

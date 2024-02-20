@@ -14,7 +14,7 @@ public class Main {
 
 
         // Add the following code to the main method:
-        EntityManagerFactory emf = HibernateConfig.getEntityManagerFactoryConfig();
+        EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory(false);
         EntityManager em = emf.createEntityManager();
 
         // Store 1000 Point objects in the database:
