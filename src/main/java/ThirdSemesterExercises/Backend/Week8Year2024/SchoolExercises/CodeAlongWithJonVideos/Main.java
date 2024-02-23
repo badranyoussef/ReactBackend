@@ -17,8 +17,17 @@ public class Main {
             Fee f2 = new Fee(150, LocalDate.of(2023, 7, 19));
             p1.addFee(f1);
             p1.addFee(f2);
+            Event e1 = new Event("DM-Senior", LocalDate.now());
+            Event e2 = new Event("SM-Senior", LocalDate.now());
+            //p1.addEvent(e1);
+            //p1.addEvent(e2);
+
+            p1.addEvent(p1, e1, LocalDate.now(), 300);
+            p1.addEvent(p1, e2, LocalDate.now(), 300);
 
             em.getTransaction().begin();
+            em.persist(e1);
+            em.persist(e2);
             em.persist(p1);
             em.getTransaction().commit();
         }
