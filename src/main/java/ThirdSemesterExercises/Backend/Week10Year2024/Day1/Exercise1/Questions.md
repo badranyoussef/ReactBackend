@@ -11,4 +11,4 @@ Status code 302 (Temporarily).
 ### 6) I successfully placed an order for a custom-made cake at the bakery, and they informed me that it would be ready soon. Which HTTP status code does this refer to?
 Status code 202 (Accepted, but not ready yet).
 ### 7) I went to a store to buy a particular brand of sneakers, but they informed me that they've moved to a new location. Which HTTP status code does this refer to?
-Status code 301 301 (Moved Permanently).
+Status code 301 (Moved Permanently).
