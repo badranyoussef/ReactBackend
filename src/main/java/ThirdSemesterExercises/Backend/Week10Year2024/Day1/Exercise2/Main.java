@@ -24,7 +24,7 @@ public class Main {
         map.put(dogDTO1.getId(), dogDTO1);
         map.put(dogDTO2.getId(), dogDTO2);
 
-        // Setup the server so that all dog endpoints are under the path /api/dogs
+        // Set up the server so that all dog endpoints are under the path /api/dogs
         app.routes(() -> {
             path("/api/dogs", () -> {
                 get("/", DogController.getAllDogs());
