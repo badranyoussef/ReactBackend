@@ -7,14 +7,20 @@ import io.javalin.apibuilder.EndpointGroup;
 
 public class ApplicationConfig {
     private ObjectMapper om = new ObjectMapper();
-    private Javalin app;
     private static ApplicationConfig instance;
+    private Javalin app;
 
     private ApplicationConfig() {
+        // Initialize ObjectMapper
+        ObjectMapper om = new ObjectMapper();
 
+        // Initialize Javalin app
+        app = Javalin.create(config -> {
+            config.http.defaultContentType = "application/json";
+            config.routing.contextPath = "/api";
+        });
     }
 
-    // Nu er den en singleton
     public static ApplicationConfig getInstance() {
         if (instance == null) {
             instance = new ApplicationConfig();
@@ -23,10 +29,6 @@ public class ApplicationConfig {
     }
 
     public ApplicationConfig initiateServer() {
-        app = app.create(config -> {
-            config.http.defaultContentType = "application/json";
-            config.routing.contextPath = "/api";
-        });
         return instance;
     }
 
@@ -40,19 +42,21 @@ public class ApplicationConfig {
         return instance;
     }
 
-    public ApplicationConfig setException500() {
+    public ApplicationConfig setExceptionHandlers() {
+
         app.exception(Exception.class, (e, ctx) -> {
             ObjectNode node = om.createObjectNode().put("errorMessage", e.getMessage());
             ctx.status(500).json(node);
         });
-        return instance;
-    }
 
-    public ApplicationConfig setException404() {
-        app.exception(Exception.class, (e, ctx) -> {
-            ObjectNode node = om.createObjectNode().put("errorMessage", e.getMessage());
-            ctx.status(404).json(node);
+        app.error(404, ctx -> {
+            ctx.status(404).result("Not Found");
         });
+
+        app.exception(IllegalStateException.class, (e, ctx) -> {
+            ctx.status(400).result("Bad Request: " + e.getMessage());
+        });
+
         return instance;
     }
 }

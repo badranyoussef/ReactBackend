@@ -15,7 +15,7 @@ public class HotelController {
     public static Handler getAll(HotelDAO dao) {
         return ctx -> {
             if (dao.getAll().isEmpty()) {
-                ctx.status(404).result("No Hotels available");
+                ctx.status(404).result("No hotels were found.");
             } else {
                 ctx.json(dao.getAll());
             }
@@ -27,9 +27,9 @@ public class HotelController {
             Hotel foundHotel = dao.getById(Integer.parseInt(ctx.pathParam("id")));
             if (foundHotel != null) {
                 dao.delete(foundHotel.getId());
-                ctx.status(204).result("Hotel successfully deleted");
+                ctx.status(204).result("Hotel successfully deleted.");
             } else {
-                ctx.status(500).result("Hotel was not found");
+                ctx.status(500).result("Hotel was not found.");
             }
         };
     }
@@ -46,7 +46,7 @@ public class HotelController {
                         .build();
                 ctx.json(hotelDTO);
             } else {
-                ctx.status(404).result("The id you are looking for does not exist");
+                ctx.status(404).result("The hotel id you are looking for does not exist.");
             }
         };
     }
@@ -64,7 +64,7 @@ public class HotelController {
                 List<RoomDTO> roomDTOs = rooms.stream()
                         .map(room -> RoomDTO.builder()
                                 .id(room.getId())
-                                .hotelId(room.getHotelId())
+                                .hotelId(room.getHotel().getId())
                                 .number(room.getNumber())
                                 .price(room.getPrice())
                                 .build())
@@ -72,7 +72,7 @@ public class HotelController {
 
                 ctx.json(roomDTOs);
             } else {
-                ctx.status(404).result("The hotel with the provided id does not exist");
+                ctx.status(404).result("The hotel with the provided id does not exist.");
             }
         };
     }
@@ -84,7 +84,7 @@ public class HotelController {
                 dao.create(hotel);
                 ctx.json(hotel);
             } else {
-                ctx.status(500).result("Received data was incorrect... Something went wrong. Check create method in controller");
+                ctx.status(500).result("Couldn't create the hotel with the given data.");
             }
         };
     }
@@ -110,7 +110,7 @@ public class HotelController {
             } else {
                 // Hotel with the provided ID not found
                 ctx.status(404);
-                ctx.result("Hotel not found");
+                ctx.result("Hotel not found.");
             }
         };
     }

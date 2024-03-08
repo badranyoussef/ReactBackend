@@ -1,67 +1,52 @@
 package ThirdSemesterExercises.Backend.Week10Year2024.Day2;
 
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Config.ApplicationConfig;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Config.HibernateConfig;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Controller.HotelController;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Controller.RoomController;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.DAOs.HotelDAO;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.DAOs.RoomDAO;
-import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Entities.Hotel;
-import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Entities.Room;
-import io.javalin.Javalin;
+import io.javalin.apibuilder.EndpointGroup;
 import jakarta.persistence.EntityManagerFactory;
 
+import static io.javalin.apibuilder.ApiBuilder.*;
+
 public class App {
+
+    private static HotelDAO hotelDAO;
+    private static RoomDAO roomDAO;
+
     public static void main(String[] args) {
         EntityManagerFactory emf = HibernateConfig.getEntityManagerFactoryConfig(false);
-        HotelDAO hotelDAO = new HotelDAO(emf, Hotel.class);
-        RoomDAO roomDAO = new RoomDAO(emf, Room.class);
+        hotelDAO = HotelDAO.getInstance(emf);
+        roomDAO = RoomDAO.getInstance(emf);
 
-        // Generating data for my database
-        /*Hotel hotel1 = new Hotel("Hotel A", "Lyngby");
-        Hotel hotel2 = new Hotel("Hotel B", "ASD");
-
-        Room room1ForHotel1 = new Room(1, 500);
-        Room room2ForHotel1 = new Room(2, 600);
-        Room room1ForHotel2 = new Room(1, 500);
-        Room room2ForHotel2 = new Room(2, 600);
-
-        hotel1.addRoom(room1ForHotel1);
-        hotel1.addRoom(room2ForHotel1);
-
-        hotel2.addRoom(room1ForHotel2);
-        hotel2.addRoom(room2ForHotel2);
-
-        hotelDAO.create(hotel1);
-        hotelDAO.create(hotel2);*/
-        // Generating data for my database
-
-        // ???
-        /*ApplicationConfig app = ApplicationConfig.getInstance();
+        ApplicationConfig app = ApplicationConfig.getInstance();
         app.initiateServer()
-                .startServer(7070)
-                .setException500()
-                .setException404()
-                .setRoute(() -> {
-                    path("/hotels", () -> {
-                        get("/", ctx -> HotelController.getAll(hotelDAO));
-                    });
-                });*/
+                .startServer(7007)
+                .setExceptionHandlers()
+                .setRoute(hotelRoutes())
+                .setRoute(roomRoutes());
+    }
 
-        Javalin app = Javalin.create().start(7007);
+    public static EndpointGroup hotelRoutes() {
+        return () -> {
+            get("/hotels", HotelController.getAll(hotelDAO));
+            get("/hotels/{id}", HotelController.getHotel(hotelDAO));
+            get("/hotels/{id}/rooms", HotelController.getHotelWithRooms(hotelDAO, roomDAO));
+            post("/hotels", HotelController.create(hotelDAO));
+            put("/hotels/{id}", HotelController.update(hotelDAO));
+            delete("/hotels/{id}", HotelController.delete(hotelDAO));
+        };
+    }
 
-        // For hotel
-        app.get("/hotels", HotelController.getAll(hotelDAO));
-        app.get("/hotels/{id}", HotelController.getHotel(hotelDAO));
-        app.get("/hotels/{id}/rooms", HotelController.getHotelWithRooms(hotelDAO, roomDAO));
-        app.post("/hotels", HotelController.create(hotelDAO));
-        app.put("/hotels/{id}", HotelController.update(hotelDAO));
-        app.delete("/hotels/{id}", HotelController.delete(hotelDAO));
-
-        // For Room
-        app.get("/rooms", RoomController.getAll(roomDAO));
-        app.get("/rooms/{id}", RoomController.getRoom(roomDAO));
-        app.post("/rooms", RoomController.create(roomDAO));
-        app.put("/rooms/{id}", RoomController.update(roomDAO));
-        app.delete("/rooms/{id}", RoomController.delete(roomDAO));
+    public static EndpointGroup roomRoutes() {
+        return () -> {
+            get("/rooms", RoomController.getAll(roomDAO));
+            get("/rooms/{id}", RoomController.getRoom(roomDAO));
+            post("/rooms", RoomController.create(roomDAO));
+            put("/rooms/{id}", RoomController.update(roomDAO));
+            delete("/rooms/{id}", RoomController.delete(roomDAO));
+        };
     }
 }

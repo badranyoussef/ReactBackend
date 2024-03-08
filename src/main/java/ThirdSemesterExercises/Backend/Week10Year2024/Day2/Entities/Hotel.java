@@ -31,14 +31,4 @@ public class Hotel {
             room.setHotel(this);
         }
     }
-
-    public int setHotelId(int id) {
-        this.id = id;
-        return id;
-    }
-
-    public Hotel(String name, String address) {
-        this.name = name;
-        this.address = address;
-    }
 }

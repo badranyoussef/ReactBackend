@@ -15,7 +15,7 @@ public class DTOConverter {
     public static RoomDTO convertToRoomDTO(Room room) {
         RoomDTO roomDTO = new RoomDTO();
         roomDTO.setId(room.getId());
-        roomDTO.setHotelId(room.getHotelId());
+        roomDTO.setHotelId(room.getHotel().getId());
         roomDTO.setNumber(room.getNumber());
         roomDTO.setPrice(room.getPrice());
         return roomDTO;

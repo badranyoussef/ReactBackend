@@ -2,6 +2,7 @@ package ThirdSemesterExercises.Backend.Week10Year2024.Day2.Controller;
 
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.DAOs.RoomDAO;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.DTOs.RoomDTO;
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Entities.Hotel;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Entities.Room;
 import io.javalin.http.Handler;
 
@@ -14,22 +15,29 @@ public class RoomController {
                 Room createdRoom = dao.create(room);
                 ctx.json(createdRoom);
             } else {
-                ctx.status(500).result("Received data was incorrect... Something went wrong. Check create method in controller");
+                ctx.status(500).result("Couldn't create the room with the given data.");
             }
         };
     }
 
     public static Handler delete(RoomDAO dao) {
         return ctx -> {
-            Room foundRoom = dao.getById(Integer.parseInt(ctx.pathParam("id")));
+            int roomId = Integer.parseInt(ctx.pathParam("id"));
+            Room foundRoom = dao.getById(roomId);
+
             if (foundRoom != null) {
-                dao.delete(foundRoom.getId());
+                Hotel hotel = foundRoom.getHotel();
+                if (hotel != null) {
+                    hotel.getRooms().remove(foundRoom); // Remove the room from the hotel's rooms list
+                }
+                dao.delete(roomId); // Now delete the room
                 ctx.status(204).result("Room successfully deleted");
             } else {
-                ctx.status(500).result("Room was not found");
+                ctx.status(404).result("Room not found");
             }
         };
     }
+
 
     public static Handler getRoom(RoomDAO dao) {
         return ctx -> {
@@ -40,7 +48,7 @@ public class RoomController {
                         .id(foundRoom.getId())
                         .number(foundRoom.getNumber())
                         .price(foundRoom.getPrice())
-                        .hotelId(foundRoom.getHotelId())
+                        .hotelId(foundRoom.getHotel().getId())
                         .build();
                 ctx.json(roomDTO);
             } else {

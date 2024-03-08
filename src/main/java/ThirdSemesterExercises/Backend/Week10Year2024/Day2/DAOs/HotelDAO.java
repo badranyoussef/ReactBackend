@@ -9,10 +9,20 @@ import java.util.List;
 
 public class HotelDAO extends AbstractDAO<Hotel> {
 
-    public HotelDAO(EntityManagerFactory emf, Class<Hotel> entityClass) {
-        super(emf, entityClass);
+    private static HotelDAO instance;
+    private static EntityManagerFactory emf;
+
+    private HotelDAO(EntityManagerFactory _emf, Class<Hotel> entityClass) {
+        super(_emf, entityClass);
     }
 
+    public static HotelDAO getInstance(EntityManagerFactory _emf) {
+        if (instance == null) {
+            emf = _emf;
+            instance = new HotelDAO(emf, Hotel.class);
+        }
+        return instance;
+    }
 
     public List<Hotel> getAll() {
         EntityManager em = emf.createEntityManager();

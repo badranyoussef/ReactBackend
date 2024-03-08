@@ -1,40 +1,41 @@
-GET http://localhost:7007/hotels
 ### Henter alle hoteller
+GET http://localhost:7007/api/hotels
 
-GET http://localhost:7007/hotels/3
 ### Henter et specifikt hotel udfra id'et
+GET http://localhost:7007/api/hotels/7
 
-GET http://localhost:7007/hotels/3/rooms
-### Henter et specifks hotel ud fra id'ets værelser
+### Henter et specifikt hotel ud fra id'ets værelser
+GET http://localhost:7007/api/hotels/7/rooms
 
-POST http://localhost:7007/hotels
+### Indsætter et nyt hotel ind i databasen
+POST http://localhost:7007/api/hotels
 Content-Type: application/json
 
 {
   "name": "name",
   "address": "Test"
 }
-### Indsætter et nyt hotel ind i databasen
 
-PUT http://localhost:7007/hotels/3
+### Opdaterer et eksisterende hotels navn & adresse
+PUT http://localhost:7007/api/hotels/6
 Content-Type: application/json
 
 {
   "name": "Bedste-hotel",
   "address": "Kongevejen"
 }
-### Updatere et eksisterende hotels navn & adresse
 
-DELETE http://localhost:7007/hotels/3
 ### Sletter et hotel ud fra et specifikt id
+DELETE http://localhost:7007/api/hotels/6
 
-GET http://localhost:7007/rooms
 ### Henter alle værelser
+GET http://localhost:7007/api/rooms
 
-GET http://localhost:7007/rooms/3
-### Henter alle værelser
+### Henter et specifikt værelse ud fra id'et
+GET http://localhost:7007/api/rooms/3
 
-POST http://localhost:7007/rooms
+### Indsætter et nyt rum ind i databasen med et hotel
+POST http://localhost:7007/api/rooms
 Content-Type: application/json
 
 {
@@ -44,18 +45,15 @@ Content-Type: application/json
     "id": 16
   }
 }
-### Indsætter et nyt rum ind i databasen med et hotel
 
-PUT http://localhost:7007/rooms/34
+### Opdatere et eksisterende rum ud fra id'et
+PUT http://localhost:7007/api/rooms/34
 Content-Type: application/json
 
 {
   "number": 30,
   "price": 4000
 }
-### Opdatere et eksisterende rum ud fra id'et
 
-DELETE http://localhost:7007/rooms/3
 ### Sletter et eksisterende rum ud fra id'et
-
-
+DELETE http://localhost:7007/api/rooms/34
