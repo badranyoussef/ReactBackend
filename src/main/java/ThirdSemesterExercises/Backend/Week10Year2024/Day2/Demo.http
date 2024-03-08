@@ -1,0 +1,61 @@
+GET http://localhost:7007/hotels
+### Henter alle hoteller
+
+GET http://localhost:7007/hotels/3
+### Henter et specifikt hotel udfra id'et
+
+GET http://localhost:7007/hotels/3/rooms
+### Henter et specifks hotel ud fra id'ets værelser
+
+POST http://localhost:7007/hotels
+Content-Type: application/json
+
+{
+  "name": "name",
+  "address": "Test"
+}
+### Indsætter et nyt hotel ind i databasen
+
+PUT http://localhost:7007/hotels/3
+Content-Type: application/json
+
+{
+  "name": "Bedste-hotel",
+  "address": "Kongevejen"
+}
+### Updatere et eksisterende hotels navn & adresse
+
+DELETE http://localhost:7007/hotels/3
+### Sletter et hotel ud fra et specifikt id
+
+GET http://localhost:7007/rooms
+### Henter alle værelser
+
+GET http://localhost:7007/rooms/3
+### Henter alle værelser
+
+POST http://localhost:7007/rooms
+Content-Type: application/json
+
+{
+  "number": 30,
+  "price": 3000,
+  "hotel": {
+    "id": 16
+  }
+}
+### Indsætter et nyt rum ind i databasen med et hotel
+
+PUT http://localhost:7007/rooms/34
+Content-Type: application/json
+
+{
+  "number": 30,
+  "price": 4000
+}
+### Opdatere et eksisterende rum ud fra id'et
+
+DELETE http://localhost:7007/rooms/3
+### Sletter et eksisterende rum ud fra id'et
+
+

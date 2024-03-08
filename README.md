@@ -1,3 +1,3 @@
-# ThirdSemesterExercises
+# Third semester exercises
 
-By Ahmad Alkaseb
+by Ahmad Alkaseb, february 2024

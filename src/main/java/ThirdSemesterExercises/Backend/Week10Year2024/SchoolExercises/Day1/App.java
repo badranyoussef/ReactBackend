@@ -1,29 +1,13 @@
 package ThirdSemesterExercises.Backend.Week10Year2024.SchoolExercises.Day1;
 
-import com.google.gson.Gson;
-import io.javalin.Javalin;
-import io.javalin.http.Handler;
-import lombok.*;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static io.javalin.apibuilder.ApiBuilder.*;
+import static io.javalin.apibuilder.ApiBuilder.get;
+import static io.javalin.apibuilder.ApiBuilder.path;
 
 public class App {
-    private static Map<Integer, Person> personMap = new HashMap<>();
+    //private static Map<Integer, Person> personMap = new HashMap<>();
 
     public static void main(String[] args) {
-        Javalin app = Javalin.create().start(7007);
+        //Javalin app = Javalin.create().start(7007);
         //app.get("/", ctx -> ctx.result("Hello World"));
 
         // En anden måde at skrive det på uden lambda udtryk
@@ -34,6 +18,22 @@ public class App {
             }
         });*/
 
+        ApplicationConfig app = ApplicationConfig.getInstance();
+        app.initiateServer()
+                .startServer(7070)
+                .setException500()
+                .setException404()
+                .setRoute(() -> {
+                    path("/demo", () -> {
+                        get("/test", ctx -> ctx.json("{\"msg\":\"Hello From Server\"}"));
+                        get("/error", ctx -> {
+                            throw new Exception("Dette er en test");
+                        });
+                    });
+                });
+    }
+}
+        /*
         List<Person> personList = Arrays.asList(
                 new Person(1, "Ahmad", 25), new Person(2, "Youssef", 26),
                 new Person(3, "Hanni", 27), new Person(4, "Lasse", 28));
@@ -177,4 +177,4 @@ public class App {
     private static class Test {
         String currentDate;
     }
-}
+}*/

@@ -1,0 +1,5 @@
+GET http://localhost:7007/hello/Ahmad
+###
+
+GET http://localhost:7007/hello/Ahmad/age/25
+###
