@@ -24,7 +24,8 @@ public class HotelController {
 
     public static Handler delete(HotelDAO dao) {
         return ctx -> {
-            Hotel foundHotel = dao.getById(Integer.parseInt(ctx.pathParam("id")));
+            int id = Integer.parseInt(ctx.pathParam("id"));
+            Hotel foundHotel = dao.getById(id);
             if (foundHotel != null) {
                 dao.delete(foundHotel.getId());
                 ctx.status(204).result("Hotel successfully deleted.");
@@ -114,6 +115,5 @@ public class HotelController {
             }
         };
     }
-
 }
 

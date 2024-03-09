@@ -2,7 +2,6 @@ package ThirdSemesterExercises.Backend.Week10Year2024.Day2.Controller;
 
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.DAOs.RoomDAO;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.DTOs.RoomDTO;
-import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Entities.Hotel;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Entities.Room;
 import io.javalin.http.Handler;
 
@@ -26,14 +25,10 @@ public class RoomController {
             Room foundRoom = dao.getById(roomId);
 
             if (foundRoom != null) {
-                Hotel hotel = foundRoom.getHotel();
-                if (hotel != null) {
-                    hotel.getRooms().remove(foundRoom); // Remove the room from the hotel's rooms list
-                }
-                dao.delete(roomId); // Now delete the room
-                ctx.status(204).result("Room successfully deleted");
+                dao.delete(roomId);
+                ctx.status(204).result("Room successfully deleted.");
             } else {
-                ctx.status(404).result("Room not found");
+                ctx.status(404).result("Room not found.");
             }
         };
     }
@@ -52,7 +47,7 @@ public class RoomController {
                         .build();
                 ctx.json(roomDTO);
             } else {
-                ctx.status(404).result("The id you are looking for does not exist");
+                ctx.status(404).result("The id you are looking for does not exist.");
             }
         };
     }
@@ -60,7 +55,7 @@ public class RoomController {
     public static Handler getAll(RoomDAO dao) {
         return ctx -> {
             if (dao.getAll().isEmpty()) {
-                ctx.status(404).result("No rooms available");
+                ctx.status(404).result("No rooms available.");
             } else {
                 ctx.json(dao.getAll());
             }
@@ -88,7 +83,7 @@ public class RoomController {
             } else {
                 // Hotel with the provided ID not found
                 ctx.status(404);
-                ctx.result("Hotel not found");
+                ctx.result("Room not found.");
             }
         };
     }

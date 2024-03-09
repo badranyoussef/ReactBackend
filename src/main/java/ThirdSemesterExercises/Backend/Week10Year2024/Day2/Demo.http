@@ -56,4 +56,4 @@ Content-Type: application/json
 }
 
 ### Sletter et eksisterende rum ud fra id'et
-DELETE http://localhost:7007/api/rooms/34
+DELETE http://localhost:7007/api/rooms/27

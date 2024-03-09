@@ -22,7 +22,7 @@ public class Hotel {
     private String name;
     private String address;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "hotel")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, mappedBy = "hotel")
     private List<Room> rooms = new ArrayList<>();
 
     public void addRoom(Room room) {
