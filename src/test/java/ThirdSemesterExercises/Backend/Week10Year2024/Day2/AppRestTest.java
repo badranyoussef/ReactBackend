@@ -11,10 +11,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.List;
 
@@ -309,6 +306,6 @@ class AppRestTest {
                 .body("number", equalTo(1))
                 .body("price", equalTo(500))
                 .body("hotelId", equalTo(expectedHotelId))
-                .body("id",equalTo(expectedHotelId));
+                .body("id", equalTo(expectedHotelId));
     }
 }
