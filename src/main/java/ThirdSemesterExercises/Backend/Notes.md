@@ -56,3 +56,26 @@ Example:
 Function<Integer, String> toStringFunction = (Integer x) -> "Number: " + x;  
 String result = toStringFunction.apply(42); // Converts integer to string with a prefix  
 result will be "Number: 42"  
+
+### Brcrypt (Slow)
+The generated hash is called password digest.
+To make it even more safe, we add a "salt", so that it is will be
+impossible to generate the original value.  
+It is slow, so that it will take forever to hackers to generate values.  
+
+### JWT
+Json web token
+
+JWTs have three parts separated by dots (.):
+
+Header: Contains information about the type of token and the hashing algorithm used to secure it.  
+Payload: This is where the actual data is stored. It contains claims, which are statements about an entity (typically, the user) 
+and additional metadata.  
+Signature: This part verifies that the token hasn't been tampered with. It's created by taking the encoded header, the encoded payload, 
+a secret key known only to the server, and the chosen algorithm, and then hashing them together.  
+
+JWTs are often used in authentication systems. For example, when you log in to a website, 
+the server might create a JWT containing your user ID and some other information. 
+It then sends this JWT back to your browser. Your browser stores the JWT, and whenever you make a request to the server 
+(like asking for your profile page), you send the JWT along with the request. The server can then check the JWT to 
+make sure you're allowed to access that page.
