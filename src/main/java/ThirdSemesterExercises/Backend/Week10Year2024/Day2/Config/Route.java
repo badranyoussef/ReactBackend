@@ -10,12 +10,16 @@ import jakarta.persistence.EntityManagerFactory;
 import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class Route {
+    //private static EntityManagerFactory emf;
+    private static HotelDAO hotelDAO;
+    private static RoomDAO roomDAO;
 
-    private static EntityManagerFactory emf = HibernateConfig.getEntityManagerFactoryConfig(false);
-    private static HotelDAO hotelDAO = HotelDAO.getInstance(emf);
-    private static RoomDAO roomDAO = RoomDAO.getInstance(emf);
+    public Route(EntityManagerFactory emf) {
+        hotelDAO = HotelDAO.getInstance(emf);
+        roomDAO = RoomDAO.getInstance(emf);
+    }
 
-    public static EndpointGroup hotelRoutes() {
+    public EndpointGroup hotelRoutes() {
         return () -> {
             get("/hotels", HotelController.getAll(hotelDAO));
             get("/hotels/{id}", HotelController.getHotelById(hotelDAO));
@@ -26,7 +30,7 @@ public class Route {
         };
     }
 
-    public static EndpointGroup roomRoutes() {
+    public EndpointGroup roomRoutes() {
         return () -> {
             get("/rooms", RoomController.getAll(roomDAO));
             get("/rooms/{id}", RoomController.getRoom(roomDAO));

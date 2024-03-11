@@ -25,5 +25,10 @@ public class Room {
 
     private int number;
     private int price;
+
+    public Room(int number, int price) {
+        this.number = number;
+        this.price = price;
+    }
 }
 

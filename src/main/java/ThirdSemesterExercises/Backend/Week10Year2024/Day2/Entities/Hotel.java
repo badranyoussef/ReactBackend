@@ -31,4 +31,9 @@ public class Hotel {
             room.setHotel(this);
         }
     }
+
+    public Hotel(String name, String address) {
+        this.name = name;
+        this.address = address;
+    }
 }

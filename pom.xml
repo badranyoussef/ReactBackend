@@ -24,9 +24,31 @@
         <restassured.version>5.3.2</restassured.version>
         <testcontainers.version>1.19.5</testcontainers.version>
         <junit.version>5.9.1</junit.version>
+        <hamcrest.version>2.0.0.0</hamcrest.version>
+        <restassured.version>5.3.0</restassured.version>
     </properties>
 
     <dependencies>
+        <!--        https://www.baeldung.com/hamcrest-core-matchers-->
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>java-hamcrest</artifactId>
+            <version>${hamcrest.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!--        https://www.baeldung.com/rest-assured-tutorial-->
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>${restassured.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>json-schema-validator</artifactId>
+            <version>${restassured.version}</version>
+            <scope>test</scope>
+        </dependency>
         <!-- Javalin -->
 
         <dependency>
@@ -232,7 +254,25 @@
             <artifactId>kotlin-stdlib-jdk8</artifactId>
             <version>${kotlin.version}</version>
         </dependency>
-
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.7.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>5.7.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.7.2</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
