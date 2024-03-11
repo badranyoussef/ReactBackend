@@ -4,15 +4,23 @@ import ThirdSemesterExercises.Backend.Week10Year2024.Day2.DAOs.RoomDAO;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.DTOs.RoomDTO;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Entities.Room;
 import io.javalin.http.Handler;
+import io.javalin.http.HttpStatus;
 
 public class RoomController {
 
     public static Handler create(RoomDAO dao) {
         return ctx -> {
             Room room = ctx.bodyAsClass(Room.class);
+
             if (room != null) {
                 Room createdRoom = dao.create(room);
-                ctx.json(createdRoom);
+
+                RoomDTO createdRoomDTO = RoomDTO.builder()
+                        .id(createdRoom.getId())
+                        .number(createdRoom.getNumber())
+                        .price(createdRoom.getPrice()).build();
+
+                ctx.json(createdRoomDTO);
             } else {
                 ctx.status(500).result("Couldn't create the room with the given data.");
             }
@@ -25,8 +33,14 @@ public class RoomController {
             Room foundRoom = dao.getById(roomId);
 
             if (foundRoom != null) {
+                RoomDTO roomDTO = RoomDTO.builder()
+                        .id(foundRoom.getId())
+                        .number(foundRoom.getNumber())
+                        .price(foundRoom.getPrice())
+                        .hotelId(foundRoom.getHotel().getId()).build();
+
                 dao.delete(roomId);
-                ctx.status(204).result("Room successfully deleted.");
+                ctx.status(200).json(roomDTO);
             } else {
                 ctx.status(404).result("Room not found.");
             }
@@ -45,7 +59,7 @@ public class RoomController {
                         .price(foundRoom.getPrice())
                         .hotelId(foundRoom.getHotel().getId())
                         .build();
-                ctx.json(roomDTO);
+                ctx.status(HttpStatus.OK).json(roomDTO);
             } else {
                 ctx.status(404).result("The id you are looking for does not exist.");
             }

@@ -32,6 +32,7 @@ public class HotelController {
                         .id(foundHotel.getId())
                         .name(foundHotel.getName())
                         .address(foundHotel.getAddress())
+                        .rooms(foundHotel.getRooms())
                         .build();
 
                 dao.delete(foundHotel.getId());
@@ -53,6 +54,7 @@ public class HotelController {
                         .id(foundHotel.getId())
                         .name(foundHotel.getName())
                         .address(foundHotel.getAddress())
+                        .rooms(foundHotel.getRooms())
                         .build();
                 ctx.status(HttpStatus.OK).json(hotelDTO);
             } else {
@@ -106,6 +108,7 @@ public class HotelController {
 
             // Fetch the hotel from the database
             Hotel foundHotel = dao.getById(id);
+            updatedHotelDTO.setRooms(foundHotel.getRooms());
 
             if (foundHotel != null) {
                 foundHotel.setName(updatedHotelDTO.getName());

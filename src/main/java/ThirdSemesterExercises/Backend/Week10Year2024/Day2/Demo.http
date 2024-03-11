@@ -17,7 +17,7 @@ Content-Type: application/json
 }
 
 ### Opdaterer et eksisterende hotels navn & adresse
-PUT http://localhost:7007/api/hotels/6
+PUT http://localhost:7007/api/hotels/12
 Content-Type: application/json
 
 {
