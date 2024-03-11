@@ -1,6 +1,7 @@
 package ThirdSemesterExercises.Backend.Week10Year2024.Day2.DAOs;
 
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Entities.Hotel;
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Entities.Room;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
@@ -29,6 +30,32 @@ public class HotelDAO extends AbstractDAO<Hotel> {
         try {
             TypedQuery<Hotel> query = em.createQuery("SELECT h FROM Hotel h", Hotel.class);
             return query.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public int delete(int id) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+
+            Hotel hotelFound = em.find(Hotel.class, id);
+
+            if (hotelFound != null) {
+                // Remove all associated rooms first
+                for (Room room : hotelFound.getRooms()) {
+                    em.remove(room);
+                }
+
+                // Remove the hotel itself
+                em.remove(hotelFound);
+
+                em.getTransaction().commit();
+                return 1;
+            }
+            return 0;
         } finally {
             em.close();
         }

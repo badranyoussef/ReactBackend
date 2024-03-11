@@ -18,7 +18,7 @@ public class Route {
     public static EndpointGroup hotelRoutes() {
         return () -> {
             get("/hotels", HotelController.getAll(hotelDAO));
-            get("/hotels/{id}", HotelController.getHotel(hotelDAO));
+            get("/hotels/{id}", HotelController.getHotelById(hotelDAO));
             get("/hotels/{id}/rooms", HotelController.getHotelWithRooms(hotelDAO, roomDAO));
             post("/hotels", HotelController.create(hotelDAO));
             put("/hotels/{id}", HotelController.update(hotelDAO));

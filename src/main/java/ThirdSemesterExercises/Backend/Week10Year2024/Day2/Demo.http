@@ -2,7 +2,7 @@
 GET http://localhost:7007/api/hotels
 
 ### Henter et specifikt hotel udfra id'et
-GET http://localhost:7007/api/hotels/7
+GET http://localhost:7007/api/hotels/21
 
 ### Henter et specifikt hotel ud fra id'ets værelser
 GET http://localhost:7007/api/hotels/7/rooms
@@ -26,7 +26,7 @@ Content-Type: application/json
 }
 
 ### Sletter et hotel ud fra et specifikt id
-DELETE http://localhost:7007/api/hotels/6
+DELETE http://localhost:7007/api/hotels/11
 
 ### Henter alle værelser
 GET http://localhost:7007/api/rooms
