@@ -1,8 +1,8 @@
 package ThirdSemesterExercises.Backend.Week10Year2024.Day2;
 
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Config.ApplicationConfig;
-import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Config.HibernateConfig;
-import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Config.Route;
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.HibernateConfig;
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Routes.Route;
 import jakarta.persistence.EntityManagerFactory;
 
 public class App {

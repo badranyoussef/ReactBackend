@@ -1,7 +1,9 @@
-package ThirdSemesterExercises.Backend.Week10Year2024.Day2.Config;
+package ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence;
 
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Entities.Hotel;
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Entities.Role;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Entities.Room;
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Entities.User;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.NoArgsConstructor;
 import org.hibernate.SessionFactory;
@@ -80,6 +82,8 @@ public class HibernateConfig {
         // configuration.addAnnotatedClass(<YOUR ENTITY>.class);
         configuration.addAnnotatedClass(Hotel.class);
         configuration.addAnnotatedClass(Room.class);
+        configuration.addAnnotatedClass(User.class);
+        configuration.addAnnotatedClass(Role.class);
     }
 
     //Singleton princippet

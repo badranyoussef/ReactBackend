@@ -1,4 +1,4 @@
-package ThirdSemesterExercises.Backend.Week10Year2024.Day2.Config;
+package ThirdSemesterExercises.Backend.Week10Year2024.Day2.Routes;
 
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Controller.HotelController;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Controller.RoomController;
