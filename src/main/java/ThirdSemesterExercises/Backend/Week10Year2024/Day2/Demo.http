@@ -57,3 +57,21 @@ Content-Type: application/json
 
 ### Sletter et eksisterende rum ud fra id'et
 DELETE http://localhost:7007/api/rooms/27
+
+### Logger ind med en bruger
+POST http://localhost:7007/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "holger",
+  "password": "1234"
+}
+
+### Registrer en ny bruger
+POST http://localhost:7007/api/auth/register
+Content-Type: application/json
+
+{
+"username": "ahmad",
+"password": "1234"
+}

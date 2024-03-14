@@ -1,9 +1,24 @@
 package ThirdSemesterExercises.Backend.Week10Year2024.Day2.ReST;
 
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Controller.SecurityController;
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.DTOs.UserDTO;
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Exceptions.AuthorizationException;
+import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.javalin.Javalin;
 import io.javalin.apibuilder.EndpointGroup;
+import io.javalin.http.HttpStatus;
+
+import io.javalin.http.Handler;
+import io.javalin.http.HttpStatus;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ApplicationConfig {
     private ObjectMapper om = new ObjectMapper();
@@ -58,6 +73,42 @@ public class ApplicationConfig {
         });
 
         return instance;
+    }
+    public ApplicationConfig checkSecurityRoles() {
+        ObjectMapper objectMapper = new ObjectMapper(); // Assuming objectMapper is available in the scope
+
+        app.updateConfig(config -> {
+            config.accessManager((handler, ctx, permittedRoles) -> {
+                Set<String> allowedRoles = new HashSet<>();
+                        /*permittedRoles.stream()
+                        .map(Enum::name)
+                        .map(String::toUpperCase)
+                        .collect(Collectors.toSet());*/
+
+                if (allowedRoles.contains("ANYONE") || ctx.method().toString().equals("OPTIONS")) {
+                    handler.handle(ctx);
+                    return;
+                }
+
+                UserDTO user = ctx.attribute("user");
+                System.out.println("USER IN CHECK_SEC_ROLES: " + user);
+
+                if (user == null) {
+                    ctx.status(HttpStatus.FORBIDDEN)
+                            .json(objectMapper.createObjectNode()
+                                    .put("msg", "Not authorized. No username was added from the token"));
+                    return;
+                }
+
+                /*if (SecurityController.authorize(user, allowedRoles)) {
+                    handler.handle(ctx);
+                } else {
+                    throw new ApiException(HttpStatus.FORBIDDEN.getCode(), "Unauthorized with roles: " + allowedRoles);
+                }*/
+            });
+        });
+
+        return instance; // Assuming instance is declared and initialized somewhere in your code
     }
 
     public void stopServer() {

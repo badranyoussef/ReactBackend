@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,7 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "users") //User is a reserved keyword
-public class User {
+public class User implements ISecurityUser {
     @Id
     private String username;
     private String password;
@@ -38,30 +39,26 @@ public class User {
         role.getUsers().add(this);
     }
 
+    @Override
     public void removeRole(Role role) {
         roles.remove(role);
         role.getUsers().remove(this);
     }
 
-    public String getRolesAsStrings() {
+    public Set<String> getRolesAsStrings() {
         if (roles.isEmpty()) {
-            return null;
+            return Collections.emptySet();
         }
-        String result = "";
 
+        Set<String> roleNames = new HashSet<>();
         for (Role role : roles) {
-
-            for (int i = 0; i <= roles.size(); i++) {
-                result += role.getName();
-                if (i < roles.size()) {
-                    result += " ,";
-                }
-            }
+            roleNames.add(role.getName());
         }
-        return result;
+        return roleNames;
     }
 
-    public boolean verifyUser(String password) {
+    @Override
+    public boolean verifyPassword(String pw) {
         return BCrypt.checkpw(password, this.password);
     }
 }

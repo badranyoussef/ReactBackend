@@ -1,11 +1,18 @@
 package ThirdSemesterExercises.Backend.Week10Year2024.Day2.DAOs;
 
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.HibernateConfig;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.Model.Role;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.Model.User;
-import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.HibernateConfig;
+import io.javalin.validation.ValidationError;
+import io.javalin.validation.ValidationException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityNotFoundException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class UserDAO implements ISecurityDAO {
 
@@ -14,6 +21,25 @@ public class UserDAO implements ISecurityDAO {
     public UserDAO(EntityManagerFactory _emf) {
         this.emf = _emf;
     }
+
+    @Override
+    public User getVerifiedUser(String username, String password) throws EntityNotFoundException {
+        try (EntityManager em = emf.createEntityManager()) {
+            List<User> users = em.createQuery("SELECT u FROM User u").getResultList();
+            users.forEach(user -> System.out.println(user.getUsername() + " " + user.getPassword()));
+            User user = em.find(User.class, username);
+            if (user == null) {
+                throw new EntityNotFoundException("No user found with username: " + username);
+            }
+            user.getRoles().size(); // force roles to be fetched from db
+            if (!user.verifyPassword(password)) {
+                throw new EntityNotFoundException("Wrong password");
+            }
+            return user;
+        }
+    }
+
+
 
     @Override
     public User createUser(String username, String password) {
@@ -48,6 +74,10 @@ public class UserDAO implements ISecurityDAO {
     }
 
     @Override
+    public User addUserRole(String username, String role) {
+        return null;
+    }
+
     public User addRoleToUser(String username, String role) {
         return null;
     }
@@ -56,7 +86,7 @@ public class UserDAO implements ISecurityDAO {
         EntityManager em = emf.createEntityManager();
         User user = em.find(User.class, username);
         if (user == null) throw new EntityNotFoundException("No user found");
-        if (!user.verifyUser(password)) throw new EntityNotFoundException("Wrong password");
+        if (!user.verifyPassword(password)) throw new EntityNotFoundException("Wrong password");
         return user;
     }
 }
