@@ -2,7 +2,7 @@ package ThirdSemesterExercises.Backend.Week10Year2024.Day2.Controller;
 
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.DAOs.RoomDAO;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.DTOs.RoomDTO;
-import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Entities.Room;
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.Model.Room;
 import io.javalin.http.Handler;
 import io.javalin.http.HttpStatus;
 

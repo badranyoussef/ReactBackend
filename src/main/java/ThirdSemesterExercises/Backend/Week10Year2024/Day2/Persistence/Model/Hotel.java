@@ -1,4 +1,4 @@
-package ThirdSemesterExercises.Backend.Week10Year2024.Day2.Entities;
+package ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.Model;
 
 import jakarta.persistence.*;
 import lombok.*;

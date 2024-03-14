@@ -1,4 +1,4 @@
-package ThirdSemesterExercises.Backend.Week10Year2024.Day2.Entities;
+package ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.Model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -43,15 +43,22 @@ public class User {
         role.getUsers().remove(this);
     }
 
-    public Set<String> getRolesAsStrings() {
+    public String getRolesAsStrings() {
         if (roles.isEmpty()) {
             return null;
         }
-        Set<String> rolesAsStrings = new HashSet<>();
+        String result = "";
+
         for (Role role : roles) {
-            rolesAsStrings.add(role.getName());
+
+            for (int i = 0; i <= roles.size(); i++) {
+                result += role.getName();
+                if (i < roles.size()) {
+                    result += " ,";
+                }
+            }
         }
-        return rolesAsStrings;
+        return result;
     }
 
     public boolean verifyUser(String password) {

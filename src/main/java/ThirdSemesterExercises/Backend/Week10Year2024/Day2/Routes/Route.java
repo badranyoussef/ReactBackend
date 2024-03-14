@@ -1,42 +1,33 @@
 package ThirdSemesterExercises.Backend.Week10Year2024.Day2.Routes;
 
-import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Controller.HotelController;
-import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Controller.RoomController;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.DAOs.HotelDAO;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.DAOs.RoomDAO;
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.HibernateConfig;
 import io.javalin.apibuilder.EndpointGroup;
 import jakarta.persistence.EntityManagerFactory;
 
-import static io.javalin.apibuilder.ApiBuilder.*;
-
 public class Route {
-    //private static EntityManagerFactory emf;
-    private static HotelDAO hotelDAO;
-    private static RoomDAO roomDAO;
+    private static EntityManagerFactory emf = HibernateConfig.getEntityManagerFactoryConfig(false);
+    private static HotelDAO hotelDAO = HotelDAO.getInstance(emf);
+    private static RoomDAO roomDAO = RoomDAO.getInstance(emf);
+    private static RoomRoute roomRoute = new RoomRoute(roomDAO);
+    private static RouteHotel routeHotel = new RouteHotel(hotelDAO, roomDAO);
 
-    public Route(EntityManagerFactory emf) {
-        hotelDAO = HotelDAO.getInstance(emf);
-        roomDAO = RoomDAO.getInstance(emf);
+    // Declare a public static method named addRoutes which returns an EndpointGroup
+    public static EndpointGroup addRoutes() {
+        // Call the combineRoutes method passing the EndpointGroup instances returned by routeHotel.hotelRoutes() and roomRoute.roomRoutes()
+        return combineRoutes(routeHotel.hotelRoutes(), roomRoute.roomRoutes());
     }
 
-    public EndpointGroup hotelRoutes() {
+    // Define a private static method named combineRoutes which takes multiple EndpointGroup instances as arguments
+    private static EndpointGroup combineRoutes(EndpointGroup... endpointGroups) {
+        // Define a lambda expression for the EndpointGroup
         return () -> {
-            get("/hotels", HotelController.getAll(hotelDAO));
-            get("/hotels/{id}", HotelController.getHotelById(hotelDAO));
-            get("/hotels/{id}/rooms", HotelController.getHotelWithRooms(hotelDAO, roomDAO));
-            post("/hotels", HotelController.create(hotelDAO));
-            put("/hotels/{id}", HotelController.update(hotelDAO));
-            delete("/hotels/{id}", HotelController.delete(hotelDAO));
-        };
-    }
-
-    public EndpointGroup roomRoutes() {
-        return () -> {
-            get("/rooms", RoomController.getAll(roomDAO));
-            get("/rooms/{id}", RoomController.getRoom(roomDAO));
-            post("/rooms", RoomController.create(roomDAO));
-            put("/rooms/{id}", RoomController.update(roomDAO));
-            delete("/rooms/{id}", RoomController.delete(roomDAO));
+            // Iterate through each EndpointGroup passed as arguments
+            for (EndpointGroup group : endpointGroups) {
+                // Add the endpoints from each EndpointGroup
+                group.addEndpoints();
+            }
         };
     }
 }

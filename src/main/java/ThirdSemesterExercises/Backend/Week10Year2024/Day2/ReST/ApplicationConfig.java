@@ -1,4 +1,4 @@
-package ThirdSemesterExercises.Backend.Week10Year2024.Day2.Config;
+package ThirdSemesterExercises.Backend.Week10Year2024.Day2.ReST;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;

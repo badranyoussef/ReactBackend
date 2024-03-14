@@ -1,7 +1,7 @@
 package ThirdSemesterExercises.Backend.Week10Year2024.Day2.DAOs;
 
-import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Entities.Role;
-import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Entities.User;
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.Model.Role;
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.Model.User;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.HibernateConfig;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;

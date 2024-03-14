@@ -1,7 +1,7 @@
 package ThirdSemesterExercises.Backend.Week10Year2024.Day2.DTOs;
 
-import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Entities.Hotel;
-import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Entities.Room;
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.Model.Hotel;
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.Model.Room;
 
 public class DTOConverter {
     public static HotelDTO convertToHotelDTO(Hotel hotel) {

@@ -1,6 +1,6 @@
 package ThirdSemesterExercises.Backend.Week10Year2024.Day2.DAOs;
 
-import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Entities.Room;
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.Model.Room;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Query;

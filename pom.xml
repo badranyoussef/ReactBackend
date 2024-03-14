@@ -28,6 +28,7 @@
         <restassured.version>5.3.0</restassured.version>
     </properties>
 
+
     <dependencies>
         <!--        https://www.baeldung.com/hamcrest-core-matchers-->
         <dependency>
@@ -285,6 +286,14 @@
             <artifactId>jbcrypt</artifactId>
             <version>0.4</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.docker-java</groupId>
+            <artifactId>docker-java-api</artifactId>
+            <version>3.3.4</version>
+            <scope>compile</scope>
+        </dependency>
+
+
     </dependencies>
 
     <build>

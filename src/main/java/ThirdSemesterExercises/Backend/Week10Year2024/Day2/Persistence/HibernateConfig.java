@@ -1,9 +1,9 @@
 package ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence;
 
-import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Entities.Hotel;
-import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Entities.Role;
-import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Entities.Room;
-import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Entities.User;
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.Model.Hotel;
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.Model.Role;
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.Model.Room;
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.Model.User;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.NoArgsConstructor;
 import org.hibernate.SessionFactory;

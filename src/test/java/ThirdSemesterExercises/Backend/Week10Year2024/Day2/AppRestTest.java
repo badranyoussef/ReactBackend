@@ -1,17 +1,20 @@
 package ThirdSemesterExercises.Backend.Week10Year2024.Day2;
 
-import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Config.ApplicationConfig;
-import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.HibernateConfig;
-import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Routes.Route;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.DTOs.HotelDTO;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.DTOs.RoomDTO;
-import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Entities.Hotel;
-import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Entities.Room;
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.HibernateConfig;
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.Model.Hotel;
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.Model.Room;
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.ReST.ApplicationConfig;
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Routes.Route;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -31,14 +34,13 @@ class AppRestTest {
         RestAssured.baseURI = "http://localhost:7007/api";
 
         emf = HibernateConfig.getEntityManagerFactoryConfig(true);
-        Route route = new Route(emf);
+        Route route = new Route();
 
         app = ApplicationConfig.getInstance();
         app.initiateServer()
                 .startServer(port)
                 .setExceptionHandlers()
-                .setRoute(route.hotelRoutes())
-                .setRoute(route.roomRoutes());
+                .setRoute(route.addRoutes());
 
         Hotel hotel1 = new Hotel("Hotel A", "Lyngby vej");
         Hotel hotel2 = new Hotel("Hotel B", "Roskilde vej");
