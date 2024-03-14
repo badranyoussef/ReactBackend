@@ -3,6 +3,7 @@ package ThirdSemesterExercises.Backend.Week10Year2024.Day2.Controller;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.DAOs.UserDAO;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.DTOs.TokenDTO;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.DTOs.UserDTO;
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.HibernateConfig;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.Model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -12,7 +13,12 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import io.javalin.http.Handler;
 import io.javalin.http.HttpStatus;
 import io.javalin.validation.ValidationException;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityNotFoundException;
 
 import java.sql.Date;
@@ -21,16 +27,12 @@ import java.util.Set;
 public class SecurityController {
 
     private static UserDAO userDAO;
-
+    private static String SECRET_KEY = "nSUGc/1kEiZl97XiCSCrqEM61g0aIINEHzz1TR/tRLg8gWBfjVIhzlOc5TXkiR4h"; // Skal mindst være 256 bits.
     public SecurityController(UserDAO userDAO) {
         this.userDAO = userDAO;
     }
 
     public Handler authenticate() {
-        // To check the users roles against the allowed roles for the endpoint (managed by javalins accessManager)
-        // Checked in 'before filter' -> Check for Authorization header to find token.
-        // Find user inside the token, forward the ctx object with userDTO on attribute
-        // When ctx hits the endpoint it will have the user on the attribute to check for roles (ApplicationConfig -> accessManager)
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode returnObject = objectMapper.createObjectNode();
         return (ctx) -> {
@@ -58,8 +60,33 @@ public class SecurityController {
     }
 
     private UserDTO verifyToken(String token) {
-        return new UserDTO();
+        try {
+            // Parse the token and extract claims
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(SECRET_KEY)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            // Extract username from claims
+            String username = claims.getSubject();
+
+            // Fetch user information from database using username
+            EntityManagerFactory emf = HibernateConfig.getEntityManagerFactoryConfig(false);
+            User user;
+            try (EntityManager em = emf.createEntityManager()) {
+                user = em.find(User.class, username);
+            }
+
+            // Return UserDTO if user exists
+            return user != null ? new UserDTO(user) : null;
+        } catch (JwtException | IllegalArgumentException e) {
+            // Token parsing failed or invalid
+            e.printStackTrace();
+            return null;
+        }
     }
+
 
     public Handler login() {
         return (ctx) -> {
@@ -67,8 +94,6 @@ public class SecurityController {
             ObjectNode returnObject = objectMapper.createObjectNode(); // for sending json messages back to the client
             try {
                 UserDTO user = ctx.bodyAsClass(UserDTO.class);
-                System.out.println("USER IN LOGIN: " + user);
-
                 User verifiedUserEntity = userDAO.getVerifiedUser(user.getUsername(), user.getPassword());
                 String token = createToken(new UserDTO(verifiedUserEntity));
                 ctx.status(200).json(new TokenDTO(token, user.getUsername()));
@@ -82,28 +107,41 @@ public class SecurityController {
     }
 
     public String createToken(UserDTO user) throws JOSEException {
-        String ISSUER;
-        String TOKEN_EXPIRE_TIME;
-        String SECRET_KEY = null;
+        try {
+            String ISSUER;
+            String TOKEN_EXPIRE_TIME;
 
-        if (System.getenv("DEPLOYED") != null) {
-            ISSUER = System.getenv("ISSUER");
-            TOKEN_EXPIRE_TIME = System.getenv("TOKEN_EXPIRE_TIME");
-            SECRET_KEY = System.getenv("SECRET_KEY");
-        } else {
-            ISSUER = "Thomas Hartmann";
-            TOKEN_EXPIRE_TIME = "1800000"; // 30 minutes in milliseconds
-            //SECRET_KEY = Utils.getPropertyValue("SECRET_KEY", "config.properties");
+            if (System.getenv("DEPLOYED") != null) {
+                ISSUER = System.getenv("ISSUER");
+                TOKEN_EXPIRE_TIME = System.getenv("TOKEN_EXPIRE_TIME");
+                SECRET_KEY = System.getenv("SECRET_KEY");
+            } else {
+                ISSUER = "Ahmad Alkaseb";
+                TOKEN_EXPIRE_TIME = "1800000"; // 30 minutes in milliseconds
+            }
+
+            if (SECRET_KEY == null) {
+                throw new IllegalStateException("Secret key is null");
+            }
+
+            return createToken(user, ISSUER, TOKEN_EXPIRE_TIME, SECRET_KEY);
+        } catch (Exception e) {
+            // Log the exception for debugging purposes
+            e.printStackTrace();
+            throw new JOSEException("Could not create token", e);
         }
-        SecurityController tokenUtils = new SecurityController(userDAO);
-        return tokenUtils.createToken(user, ISSUER, TOKEN_EXPIRE_TIME, SECRET_KEY);
     }
 
-    public String createToken(UserDTO user, String ISSUER, String TOKEN_EXPIRE_TIME, String SECRET_KEY) throws JOSEException {
+    public String createToken(UserDTO user, String ISSUER, String TOKEN_EXPIRE_TIME, String SECRET_KEY) throws
+            JOSEException {
         try {
-            Set<String> roles = user.getRoles();
+            // Validate user object
+            if (user == null) {
+                throw new IllegalArgumentException("UserDTO is null");
+            }
 
             // Convert roles to a comma-separated string
+            Set<String> roles = user.getRoles();
             String rolesString = String.join(",", roles);
 
             // Build the JWT claims set
@@ -133,8 +171,9 @@ public class SecurityController {
             // Serialize the JWS object to produce the final JWT
             return jwsObject.serialize();
 
-        } catch (JOSEException e) {
-            // Handle the JOSEException here
+        } catch (Exception e) {
+            // Log the exception for debugging purposes
+            e.printStackTrace();
             throw new JOSEException("Could not create token", e);
         }
     }

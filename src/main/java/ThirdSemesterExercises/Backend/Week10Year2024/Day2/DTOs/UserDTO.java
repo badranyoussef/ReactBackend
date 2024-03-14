@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@ToString
 @NoArgsConstructor
+@ToString
 public class UserDTO {
 
     private String username;

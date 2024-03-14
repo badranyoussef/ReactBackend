@@ -79,37 +79,39 @@ public class ApplicationConfig {
 
         app.updateConfig(config -> {
             config.accessManager((handler, ctx, permittedRoles) -> {
-                Set<String> allowedRoles = new HashSet<>();
-                        /*permittedRoles.stream()
-                        .map(Enum::name)
-                        .map(String::toUpperCase)
-                        .collect(Collectors.toSet());*/
+                Set<String> allowedRoles = new HashSet<>(); // Initialize allowedRoles with the permittedRoles
 
-                if (allowedRoles.contains("ANYONE") || ctx.method().toString().equals("OPTIONS")) {
+                // Check if the request method is OPTIONS or if ANYONE role is allowed
+                if (allowedRoles.contains("ANYONE") || ctx.method().equals("OPTIONS")) {
                     handler.handle(ctx);
                     return;
                 }
 
+                // Retrieve the authenticated user from the context attribute
                 UserDTO user = ctx.attribute("user");
-                System.out.println("USER IN CHECK_SEC_ROLES: " + user);
 
+                // Check if the user is authenticated
                 if (user == null) {
                     ctx.status(HttpStatus.FORBIDDEN)
                             .json(objectMapper.createObjectNode()
-                                    .put("msg", "Not authorized. No username was added from the token"));
+                                    .put("msg", "Not authorized. No user information available."));
                     return;
                 }
 
-                /*if (SecurityController.authorize(user, allowedRoles)) {
-                    handler.handle(ctx);
+                // Check if the user's role is allowed to access the route
+                if (allowedRoles.stream().anyMatch(role -> user.getRoles().contains(role))) {
+                    handler.handle(ctx); // Allow the request to proceed
                 } else {
-                    throw new ApiException(HttpStatus.FORBIDDEN.getCode(), "Unauthorized with roles: " + allowedRoles);
-                }*/
+                    ctx.status(HttpStatus.FORBIDDEN)
+                            .json(objectMapper.createObjectNode()
+                                    .put("msg", "Not authorized. Insufficient permissions."));
+                }
             });
         });
 
         return instance; // Assuming instance is declared and initialized somewhere in your code
     }
+
 
     public void stopServer() {
         app.stop();

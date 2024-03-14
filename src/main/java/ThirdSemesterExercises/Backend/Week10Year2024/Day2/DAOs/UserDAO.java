@@ -3,16 +3,10 @@ package ThirdSemesterExercises.Backend.Week10Year2024.Day2.DAOs;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.HibernateConfig;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.Model.Role;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.Model.User;
-import io.javalin.validation.ValidationError;
-import io.javalin.validation.ValidationException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityNotFoundException;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import jakarta.persistence.TypedQuery;
 
 public class UserDAO implements ISecurityDAO {
 
@@ -25,13 +19,15 @@ public class UserDAO implements ISecurityDAO {
     @Override
     public User getVerifiedUser(String username, String password) throws EntityNotFoundException {
         try (EntityManager em = emf.createEntityManager()) {
-            List<User> users = em.createQuery("SELECT u FROM User u").getResultList();
-            users.forEach(user -> System.out.println(user.getUsername() + " " + user.getPassword()));
+            TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.id = :id", User.class);
+            query.setParameter("id", username);
+
             User user = em.find(User.class, username);
+
             if (user == null) {
                 throw new EntityNotFoundException("No user found with username: " + username);
             }
-            user.getRoles().size(); // force roles to be fetched from db
+
             if (!user.verifyPassword(password)) {
                 throw new EntityNotFoundException("Wrong password");
             }
@@ -40,18 +36,17 @@ public class UserDAO implements ISecurityDAO {
     }
 
 
-
     @Override
     public User createUser(String username, String password) {
+        EntityManager em = emf.createEntityManager();
         try {
-            EntityManager em = emf.createEntityManager();
             em.getTransaction().begin();
             User createdUser = new User(username, password);
             em.persist(createdUser);
             em.getTransaction().commit();
             return createdUser;
         } finally {
-            emf.close();
+            em.close();
         }
     }
 
@@ -70,12 +65,33 @@ public class UserDAO implements ISecurityDAO {
 
     @Override
     public Role createRole(String role) {
-        return null;
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            Role createdRole = new Role();
+            createdRole.setName(role);
+            em.persist(createdRole);
+            em.getTransaction().commit();
+            return createdRole;
+        } finally {
+            em.close();
+        }
     }
 
     @Override
     public User addUserRole(String username, String role) {
-        return null;
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            User foundUser = em.find(User.class, username);
+            Role foundRole = em.find(Role.class, role);
+            foundUser.addRole(foundRole);
+            em.merge(foundUser);
+            em.getTransaction().commit();
+            return foundUser;
+        } finally {
+            em.close();
+        }
     }
 
     public User addRoleToUser(String username, String role) {

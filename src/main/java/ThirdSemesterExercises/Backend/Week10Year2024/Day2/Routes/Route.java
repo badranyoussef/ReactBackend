@@ -19,7 +19,7 @@ public class Route {
     // Declare a public static method named addRoutes which returns an EndpointGroup
     public static EndpointGroup addRoutes() {
         // Call the combineRoutes method passing the EndpointGroup instances returned by routeHotel.hotelRoutes() and roomRoute.roomRoutes()
-        return combineRoutes(routeHotel.hotelRoutes(), roomRoute.roomRoutes(), routeUser.getSecurityRoutes());
+        return combineRoutes(routeHotel.hotelRoutes(), roomRoute.roomRoutes(), routeUser.getSecurityRoutes(), routeUser.getSecuredRoutes());
     }
 
     // Define a private static method named combineRoutes which takes multiple EndpointGroup instances as arguments

@@ -59,6 +59,6 @@ public class User implements ISecurityUser {
 
     @Override
     public boolean verifyPassword(String pw) {
-        return BCrypt.checkpw(password, this.password);
+        return BCrypt.checkpw(pw, this.password);
     }
 }
