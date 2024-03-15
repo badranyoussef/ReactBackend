@@ -9,6 +9,7 @@ public class App {
         app.initiateServer()
                 .startServer(7007)
                 .setExceptionHandlers()
+                //.checkSecurityRoles()
                 .setRoute(Route.addRoutes());
     }
 }

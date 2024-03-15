@@ -63,7 +63,7 @@ POST http://localhost:7007/api/auth/register
 Content-Type: application/json
 
 {
-"username": "Test2",
+"username": "Hanni23",
 "password": "1234"
 }
 
@@ -72,10 +72,10 @@ POST http://localhost:7007/api/auth/login
 Content-Type: application/json
 
 {
-  "username": "Ahmad",
+  "username": "Hanni23",
   "password": "1234"
 }
 
 ### Få adgang via Json Web Token
 POST http://localhost:7007/api/protected/user_demo
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJBaG1hZCBBbGthc2ViIiwic3ViIjoiQWhtYWQiLCJleHAiOjE3MTA0MjYxNjAsInJvbGVzIjoiVVNFUiIsInVzZXJuYW1lIjoiQWhtYWQifQ.iR-G7PYHvfdOVN2wOUUlXToba7OpR3elO7hMEC9gelo
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJBaG1hZCBBbGthc2ViIiwic3ViIjoiSGFubmkyMyIsImV4cCI6MTcxMDQ5MjgyNSwicm9sZXMiOiIiLCJ1c2VybmFtZSI6Ikhhbm5pMjMifQ.VBsea5Ui7IN7WyfsfH02Axengr_wVTKHqiz-a5csfVU
