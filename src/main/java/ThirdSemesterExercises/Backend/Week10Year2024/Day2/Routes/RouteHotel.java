@@ -1,6 +1,6 @@
 package ThirdSemesterExercises.Backend.Week10Year2024.Day2.Routes;
 
-import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Controller.HotelController;
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Controllers.HotelController;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.DAOs.HotelDAO;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.DAOs.RoomDAO;
 import io.javalin.apibuilder.EndpointGroup;

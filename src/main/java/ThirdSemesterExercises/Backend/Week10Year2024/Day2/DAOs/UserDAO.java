@@ -10,10 +10,15 @@ import jakarta.persistence.TypedQuery;
 
 public class UserDAO implements ISecurityDAO {
 
-    private EntityManagerFactory emf;
+    private static UserDAO instance;
+    private static EntityManagerFactory emf;
 
-    public UserDAO(EntityManagerFactory _emf) {
-        this.emf = _emf;
+    public static UserDAO getInstance(EntityManagerFactory _emf) {
+        if (instance == null) {
+            emf = _emf;
+            instance = new UserDAO();
+        }
+        return instance;
     }
 
     @Override
@@ -39,28 +44,18 @@ public class UserDAO implements ISecurityDAO {
     @Override
     public User createUser(String username, String password) {
         EntityManager em = emf.createEntityManager();
-        try {
-            em.getTransaction().begin();
-            User createdUser = new User(username, password);
-            em.persist(createdUser);
-            em.getTransaction().commit();
-            return createdUser;
-        } finally {
-            em.close();
+        em.getTransaction().begin();
+        User user = new User(username, password);
+        Role userRole = em.find(Role.class, "user");
+        if (userRole == null) {
+            userRole = new Role("user");
+            em.persist(userRole);
         }
-    }
-
-    public static void main(String[] args) {
-        EntityManagerFactory emf = HibernateConfig.getEntityManagerFactoryConfig(false);
-        UserDAO dao = new UserDAO(emf);
-        //User user = dao.createUser("holger", "1234");
-        //System.out.println(user.getUsername());
-        try {
-            User user = dao.verifyUser("holger", "1234");
-            System.out.println(user.getUsername());
-        } catch (EntityNotFoundException e) {
-            e.printStackTrace();
-        }
+        user.addRole(userRole);
+        em.persist(user);
+        em.getTransaction().commit();
+        em.close();
+        return user;
     }
 
     @Override

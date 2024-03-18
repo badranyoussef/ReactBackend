@@ -1,26 +1,23 @@
 package ThirdSemesterExercises.Backend.Week10Year2024.Day2.ReST;
 
-import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Controller.SecurityController;
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Controllers.ISecurityController;
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Controllers.SecurityController;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.DTOs.UserDTO;
-import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Exceptions.AuthorizationException;
-import com.fasterxml.jackson.core.ObjectCodec;
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Exceptions.ApiException;
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.HibernateConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.javalin.Javalin;
 import io.javalin.apibuilder.EndpointGroup;
 import io.javalin.http.HttpStatus;
-
-import io.javalin.http.Handler;
-import io.javalin.http.HttpStatus;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
+import jakarta.persistence.EntityManagerFactory;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ApplicationConfig {
+    private static EntityManagerFactory emf = HibernateConfig.getEntityManagerFactoryConfig(false);
+    private ISecurityController securityController = new SecurityController(emf);
     private ObjectMapper om = new ObjectMapper();
     private static ApplicationConfig instance;
     private Javalin app;
@@ -74,42 +71,35 @@ public class ApplicationConfig {
 
         return instance;
     }
+
     public ApplicationConfig checkSecurityRoles() {
-        ObjectMapper objectMapper = new ObjectMapper(); // Assuming objectMapper is available in the scope
-
+        // Check roles on the user (ctx.attribute("username") and compare with permittedRoles using securityController.authorize()
         app.updateConfig(config -> {
-            config.accessManager((handler, ctx, permittedRoles) -> {
-                Set<String> allowedRoles = new HashSet<>(); // Initialize allowedRoles with the permittedRoles
 
-                // Check if the request method is OPTIONS or if ANYONE role is allowed
-                if (allowedRoles.contains("ANYONE") || ctx.method().equals("OPTIONS")) {
+            config.accessManager((handler, ctx, permittedRoles) -> {
+                // permitted roles are defined in the last arg to routes: get("/", ctx -> ctx.result("Hello World"), Role.ANYONE);
+
+                Set<String> allowedRoles = permittedRoles.stream().map(role -> role.toString().toUpperCase()).collect(Collectors.toSet());
+                if (allowedRoles.contains("ANYONE") || ctx.method().toString().equals("OPTIONS")) {
+                    // Allow requests from anyone and OPTIONS requests (preflight in CORS)
                     handler.handle(ctx);
                     return;
                 }
 
-                // Retrieve the authenticated user from the context attribute
                 UserDTO user = ctx.attribute("user");
-
-                // Check if the user is authenticated
-                if (user == null) {
+                System.out.println("USER IN CHECK_SEC_ROLES: " + user);
+                if (user == null)
                     ctx.status(HttpStatus.FORBIDDEN)
-                            .json(objectMapper.createObjectNode()
-                                    .put("msg", "Not authorized. No user information available."));
-                    return;
-                }
+                            .json(om.createObjectNode()
+                                    .put("msg", "Not authorized. No username were added from the token"));
 
-                // Check if the user's role is allowed to access the route
-                if (allowedRoles.stream().anyMatch(role -> user.getRoles().contains(role))) {
-                    handler.handle(ctx); // Allow the request to proceed
-                } else {
-                    ctx.status(HttpStatus.FORBIDDEN)
-                            .json(objectMapper.createObjectNode()
-                                    .put("msg", "Not authorized. Insufficient permissions."));
-                }
+                if (securityController.authorize(user, allowedRoles))
+                    handler.handle(ctx);
+                else
+                    throw new ApiException(HttpStatus.FORBIDDEN.getCode(), "Unauthorized with roles: " + allowedRoles);
             });
         });
-
-        return instance; // Assuming instance is declared and initialized somewhere in your code
+        return instance;
     }
 
 

@@ -11,7 +11,7 @@ public class Route {
     private static EntityManagerFactory emf = HibernateConfig.getEntityManagerFactoryConfig(false);
     private static HotelDAO hotelDAO = HotelDAO.getInstance(emf);
     private static RoomDAO roomDAO = RoomDAO.getInstance(emf);
-    private static UserDAO userDAO = new UserDAO(emf);
+    private static UserDAO userDAO = UserDAO.getInstance(emf);
     private static RoomRoute roomRoute = new RoomRoute(roomDAO);
     private static RouteHotel routeHotel = new RouteHotel(hotelDAO, roomDAO);
     private static RouteUser routeUser = new RouteUser(userDAO);
@@ -19,7 +19,7 @@ public class Route {
     // Declare a public static method named addRoutes which returns an EndpointGroup
     public static EndpointGroup addRoutes() {
         // Call the combineRoutes method passing the EndpointGroup instances returned by routeHotel.hotelRoutes() and roomRoute.roomRoutes()
-        return combineRoutes(routeHotel.hotelRoutes(), roomRoute.roomRoutes(), routeUser.getSecurityRoutes(), routeUser.getSecuredRoutes());
+        return combineRoutes(routeHotel.hotelRoutes(), roomRoute.roomRoutes(), routeUser.securedRoutes(), routeUser.securityRoutes());
     }
 
     // Define a private static method named combineRoutes which takes multiple EndpointGroup instances as arguments

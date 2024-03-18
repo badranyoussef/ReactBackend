@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -47,14 +46,13 @@ public class User implements ISecurityUser {
 
     public Set<String> getRolesAsStrings() {
         if (roles.isEmpty()) {
-            return Collections.emptySet();
+            return null;
         }
-
-        Set<String> roleNames = new HashSet<>();
-        for (Role role : roles) {
-            roleNames.add(role.getName());
-        }
-        return roleNames;
+        Set<String> rolesAsStrings = new HashSet<>();
+        roles.forEach((role) -> {
+            rolesAsStrings.add(role.getName());
+        });
+        return rolesAsStrings;
     }
 
     @Override

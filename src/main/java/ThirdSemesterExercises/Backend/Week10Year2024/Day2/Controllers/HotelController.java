@@ -1,4 +1,4 @@
-package ThirdSemesterExercises.Backend.Week10Year2024.Day2.Controller;
+package ThirdSemesterExercises.Backend.Week10Year2024.Day2.Controllers;
 
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.DAOs.HotelDAO;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.DAOs.RoomDAO;

@@ -63,7 +63,7 @@ POST http://localhost:7007/api/auth/register
 Content-Type: application/json
 
 {
-"username": "Hanni23",
+"username": "AhmadTest",
 "password": "1234"
 }
 
@@ -72,10 +72,14 @@ POST http://localhost:7007/api/auth/login
 Content-Type: application/json
 
 {
-  "username": "Hanni23",
+  "username": "AhmadTest",
   "password": "1234"
 }
 
 ### Få adgang via Json Web Token
-POST http://localhost:7007/api/protected/user_demo
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJBaG1hZCBBbGthc2ViIiwic3ViIjoiSGFubmkyMyIsImV4cCI6MTcxMDQ5MjgyNSwicm9sZXMiOiIiLCJ1c2VybmFtZSI6Ikhhbm5pMjMifQ.VBsea5Ui7IN7WyfsfH02Axengr_wVTKHqiz-a5csfVU
+GET http://localhost:7007/api/protected/user_demo
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJUaG9tYXMgSGFydG1hbm4iLCJzdWIiOiIySGFubmkyMyIsImV4cCI6MTcxMDc4NzIyMiwicm9sZXMiOiIsdXNlciIsInVzZXJuYW1lIjoiMkhhbm5pMjMifQ.NG6F7M8KsH4X1hR1TyOao96MD4oTAWF91icZDoqadG4
+
+### Få adgang via Json Web Token
+GET http://localhost:7007/api/protected/admin_demo
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJUaG9tYXMgSGFydG1hbm4iLCJzdWIiOiJBaG1hZFRlc3QiLCJleHAiOjE3MTA3ODczNjIsInJvbGVzIjoiLGFkbWluIiwidXNlcm5hbWUiOiJBaG1hZFRlc3QifQ.IEV5M8Fi79eTcXOEgNWCd4fn5Ae064jlMSIurhD4-lU

@@ -1,4 +1,4 @@
-package ThirdSemesterExercises.Backend.Week10Year2024.Day2;
+package ThirdSemesterExercises.Backend.Week10Year2024.Day2.Application;
 
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.ReST.ApplicationConfig;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Routes.Route;
@@ -9,7 +9,7 @@ public class App {
         app.initiateServer()
                 .startServer(7007)
                 .setExceptionHandlers()
-                //.checkSecurityRoles()
+                .checkSecurityRoles()
                 .setRoute(Route.addRoutes());
     }
 }
