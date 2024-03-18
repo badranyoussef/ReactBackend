@@ -1,7 +1,6 @@
 package ThirdSemesterExercises.Backend.Week10Year2024.Day2.Routes;
 
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Controllers.SecurityController;
-import ThirdSemesterExercises.Backend.Week10Year2024.Day2.DAOs.UserDAO;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.HibernateConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.apibuilder.EndpointGroup;
@@ -13,11 +12,7 @@ import static io.javalin.apibuilder.ApiBuilder.*;
 public class RouteUser {
     private static EntityManagerFactory emf = HibernateConfig.getEntityManagerFactoryConfig(false);
     private static final ObjectMapper jsonMapper = new ObjectMapper();
-    private static SecurityController securityController;
-
-    public RouteUser(UserDAO userDAO) {
-        securityController = new SecurityController(emf);
-    }
+    private static SecurityController securityController = new SecurityController(emf);
 
     public EndpointGroup securityRoutes() {
         return () -> {

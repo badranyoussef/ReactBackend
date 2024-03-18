@@ -14,7 +14,7 @@ public class Route {
     private static UserDAO userDAO = UserDAO.getInstance(emf);
     private static RoomRoute roomRoute = new RoomRoute(roomDAO);
     private static RouteHotel routeHotel = new RouteHotel(hotelDAO, roomDAO);
-    private static RouteUser routeUser = new RouteUser(userDAO);
+    private static RouteUser routeUser = new RouteUser();
 
     // Declare a public static method named addRoutes which returns an EndpointGroup
     public static EndpointGroup addRoutes() {
