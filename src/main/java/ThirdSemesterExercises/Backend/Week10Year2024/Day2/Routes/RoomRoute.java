@@ -15,11 +15,11 @@ public class RoomRoute {
 
     public EndpointGroup roomRoutes() {
         return () -> {
-            get("/rooms", RoomController.getAll(roomDAO));
-            get("/rooms/{id}", RoomController.getRoom(roomDAO));
-            post("/rooms", RoomController.create(roomDAO));
-            put("/rooms/{id}", RoomController.update(roomDAO));
-            delete("/rooms/{id}", RoomController.delete(roomDAO));
+            get("/rooms", RoomController.getAll(roomDAO), Role.ADMIN);
+            get("/rooms/{id}", RoomController.getRoom(roomDAO), Role.ADMIN);
+            post("/rooms", RoomController.create(roomDAO), Role.ADMIN);
+            put("/rooms/{id}", RoomController.update(roomDAO), Role.ADMIN);
+            delete("/rooms/{id}", RoomController.delete(roomDAO), Role.ADMIN);
         };
     }
 }

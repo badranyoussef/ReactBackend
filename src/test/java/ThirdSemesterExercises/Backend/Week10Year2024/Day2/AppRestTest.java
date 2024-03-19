@@ -1,14 +1,17 @@
 package ThirdSemesterExercises.Backend.Week10Year2024.Day2;
 
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.DAOs.UserDAO;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.DTOs.HotelDTO;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.DTOs.RoomDTO;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.HibernateConfig;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.Model.Hotel;
+import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.Model.Role;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Persistence.Model.Room;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.ReST.ApplicationConfig;
 import ThirdSemesterExercises.Backend.Week10Year2024.Day2.Routes.Route;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.path.json.JsonPath;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import org.junit.jupiter.api.AfterAll;
@@ -19,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -28,6 +32,10 @@ class AppRestTest {
     private static EntityManagerFactory emf;
     private static ApplicationConfig app;
     private static Integer port = 7007;
+    private static String userToken;
+    private static String userUsername;
+    private static String adminToken;
+    private static String adminUsername;
 
     @BeforeAll
     static void setUp() {
@@ -40,6 +48,7 @@ class AppRestTest {
         app.initiateServer()
                 .startServer(port)
                 .setExceptionHandlers()
+                .checkSecurityRoles()
                 .setRoute(route.addRoutes());
 
         Hotel hotel1 = new Hotel("Hotel A", "Lyngby vej");
@@ -51,12 +60,58 @@ class AppRestTest {
         hotel2.addRoom(new Room(1, 500));
         hotel2.addRoom(new Room(2, 800));
 
+        UserDAO userDAO = UserDAO.getInstance(emf);
+        Role role = new Role("admin");
         try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
             em.persist(hotel1);
             em.persist(hotel2);
+            em.persist(role);
             em.getTransaction().commit();
         }
+
+        // Creating a User.
+        String requestBody = "{\"username\": \"UserTest\", \"password\": \"1234\"}";
+
+        String response = RestAssured
+                .given()
+                .contentType(ContentType.JSON)
+                .body(requestBody)
+                .when()
+                .post("/auth/register")
+                .then()
+                .statusCode(201) // Expecting a 201 Created status
+                .extract().asString(); // Extracting the response body as a string
+
+        // Extract using JsonPath
+        userToken = JsonPath.from(response).getString("token");
+        userUsername = JsonPath.from(response).getString("username");
+
+        String requestBodyAdmin = "{\"username\": \"AdminTest\", \"password\": \"1234\"}";
+
+        RestAssured
+                .given()
+                .contentType(ContentType.JSON)
+                .body(requestBodyAdmin)
+                .when()
+                .post("/auth/register");
+
+        userDAO.addUserRole("AdminTest", "admin");
+
+        String loginDetails = "{\"username\": \"AdminTest\", \"password\": \"1234\"}";
+        String login = RestAssured
+                .given()
+                .contentType(ContentType.JSON)
+                .body(loginDetails)
+                .when()
+                .post("/auth/login")
+                .then()
+                .statusCode(200) // Expecting a 201 Created status
+                .extract().asString(); // Extracting the response body as a string
+
+        // Extract using JsonPath
+        adminToken = JsonPath.from(login).getString("token");
+        adminUsername = JsonPath.from(login).getString("username");
     }
 
     @AfterAll
@@ -67,14 +122,15 @@ class AppRestTest {
 
     @Test
     @DisplayName("Test server is running.")
-    public void test1() {
+    public void testServerRunning() {
         RestAssured
                 .given()
+                .header("Authorization", "Bearer " + userToken)
                 .when()
                 .get("/hotels")
                 .then()
                 .statusCode(200)
-                .body("hotels", hasSize(2));
+                .body("size()", is(2));
     }
 
     @Test
@@ -85,6 +141,7 @@ class AppRestTest {
 
         RestAssured
                 .given()
+                .header("Authorization", "Bearer " + userToken)
                 .contentType(ContentType.JSON)
                 .body(postHotel)
                 .when()
@@ -102,6 +159,7 @@ class AppRestTest {
 
         RestAssured
                 .given()
+                .header("Authorization", "Bearer " + adminToken) // Concatenate "Bearer " with userToken
                 .contentType(ContentType.JSON)
                 .pathParam("id", id) // Passing id as a path parameter
                 .when()
@@ -123,6 +181,7 @@ class AppRestTest {
 
         RestAssured
                 .given()
+                .header("Authorization", "Bearer " + adminToken) // Concatenate "Bearer " with userToken
                 .contentType(ContentType.JSON)
                 .pathParam("id", setId)
                 .when()
@@ -144,6 +203,7 @@ class AppRestTest {
 
         List<HotelDTO> list = RestAssured
                 .given()
+                .header("Authorization", "Bearer " + adminToken) // Concatenate "Bearer " with userToken
                 .when()
                 .get("/hotels")
                 .then()
@@ -174,6 +234,7 @@ class AppRestTest {
 
         RestAssured
                 .given()
+                .header("Authorization", "Bearer " + adminToken) // Concatenate "Bearer " with userToken
                 .contentType(ContentType.JSON)
                 .body(updatedHotel)
                 .when()
@@ -195,6 +256,7 @@ class AppRestTest {
 
         RestAssured
                 .given()
+                .header("Authorization", "Bearer " + adminToken) // Concatenate "Bearer " with userToken
                 .contentType(ContentType.JSON)
                 .pathParam("id", hotelId)
                 .when()
@@ -213,6 +275,7 @@ class AppRestTest {
 
         List<RoomDTO> list = RestAssured
                 .given()
+                .header("Authorization", "Bearer " + adminToken) // Concatenate "Bearer " with userToken
                 .contentType(ContentType.JSON)
                 .when()
                 .get("/rooms")
@@ -234,6 +297,7 @@ class AppRestTest {
 
         RestAssured
                 .given()
+                .header("Authorization", "Bearer " + adminToken) // Concatenate "Bearer " with userToken
                 .contentType(ContentType.JSON)
                 .pathParam("id", setId)
                 .when()
@@ -255,6 +319,7 @@ class AppRestTest {
 
         RestAssured
                 .given()
+                .header("Authorization", "Bearer " + adminToken) // Concatenate "Bearer " with userToken
                 .contentType(ContentType.JSON)
                 .body(room)
                 .when()
@@ -277,6 +342,7 @@ class AppRestTest {
 
         RestAssured
                 .given()
+                .header("Authorization", "Bearer " + adminToken) // Concatenate "Bearer " with userToken
                 .contentType(ContentType.JSON)
                 .pathParam("id", setId)
                 .body(roomDTO)
@@ -299,6 +365,7 @@ class AppRestTest {
 
         RestAssured
                 .given()
+                .header("Authorization", "Bearer " + adminToken) // Concatenate "Bearer " with userToken
                 .contentType(ContentType.JSON)
                 .pathParam("id", setId)
                 .when()

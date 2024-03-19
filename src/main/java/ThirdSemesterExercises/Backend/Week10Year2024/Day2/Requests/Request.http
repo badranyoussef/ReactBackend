@@ -1,5 +1,6 @@
 ### Henter alle hoteller
 GET http://localhost:7007/api/hotels
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJUaG9tYXMgSGFydG1hbm4iLCJzdWIiOiJUZXN0MTIiLCJleHAiOjE3MTA4NDUxNTgsInJvbGVzIjoiLHVzZXIiLCJ1c2VybmFtZSI6IlRlc3QxMiJ9.XoTU1hYfUfn7Aptpvd5Lz3h5WHk7eJZz06PT3RK-qd8
 
 ### Henter et specifikt hotel udfra id'et
 GET http://localhost:7007/api/hotels/21
@@ -63,7 +64,7 @@ POST http://localhost:7007/api/auth/register
 Content-Type: application/json
 
 {
-"username": "AhmadTest",
+"username": "Test132",
 "password": "1234"
 }
 
@@ -72,14 +73,18 @@ POST http://localhost:7007/api/auth/login
 Content-Type: application/json
 
 {
-  "username": "AhmadTest",
+  "username": "Test132",
   "password": "1234"
 }
 
 ### Få adgang via Json Web Token
 GET http://localhost:7007/api/protected/user_demo
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJUaG9tYXMgSGFydG1hbm4iLCJzdWIiOiIySGFubmkyMyIsImV4cCI6MTcxMDc4NzIyMiwicm9sZXMiOiIsdXNlciIsInVzZXJuYW1lIjoiMkhhbm5pMjMifQ.NG6F7M8KsH4X1hR1TyOao96MD4oTAWF91icZDoqadG4
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJUaG9tYXMgSGFydG1hbm4iLCJzdWIiOiJUZXN0MTIiLCJleHAiOjE3MTA4NDUxNTgsInJvbGVzIjoiLHVzZXIiLCJ1c2VybmFtZSI6IlRlc3QxMiJ9.XoTU1hYfUfn7Aptpvd5Lz3h5WHk7eJZz06PT3RK-qd8
 
 ### Få adgang via Json Web Token
 GET http://localhost:7007/api/protected/admin_demo
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJUaG9tYXMgSGFydG1hbm4iLCJzdWIiOiJBaG1hZFRlc3QiLCJleHAiOjE3MTA3ODczNjIsInJvbGVzIjoiLGFkbWluIiwidXNlcm5hbWUiOiJBaG1hZFRlc3QifQ.IEV5M8Fi79eTcXOEgNWCd4fn5Ae064jlMSIurhD4-lU
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJUaG9tYXMgSGFydG1hbm4iLCJzdWIiOiJBaG1hZFRlc3QiLCJleHAiOjE3MTA4NDMyNTUsInJvbGVzIjoiLGFkbWluIiwidXNlcm5hbWUiOiJBaG1hZFRlc3QifQ.auKgZmK3L6r90A6a0lWDrMsVD5EZzcGhKE8GhdHvteU
+
+### Få adgang via Json Web Token
+GET http://localhost:7007/api/hotels/1/rooms
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJUaG9tYXMgSGFydG1hbm4iLCJzdWIiOiJBaG1hZFRlc3QiLCJleHAiOjE3MTA4NDMyNTUsInJvbGVzIjoiLGFkbWluIiwidXNlcm5hbWUiOiJBaG1hZFRlc3QifQ.auKgZmK3L6r90A6a0lWDrMsVD5EZzcGhKE8GhdHvteU

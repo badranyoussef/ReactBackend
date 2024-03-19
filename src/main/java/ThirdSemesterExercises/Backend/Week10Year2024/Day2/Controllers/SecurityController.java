@@ -134,7 +134,7 @@ public class SecurityController implements ISecurityController {
         }
     }
 
-    public Handler authenticate() {
+    public Handler authenticate()  {
         // To check the users roles against the allowed roles for the endpoint (managed by javalins accessManager)
         // Checked in 'before filter' -> Check for Authorization header to find token.
         // Find user inside the token, forward the ctx object with userDTO on attribute
