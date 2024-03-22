@@ -17,6 +17,7 @@ public class RouteUser {
     public EndpointGroup securityRoutes() {
         return () -> {
             path("/auth", () -> {
+                before(securityController.authenticate());
                 post("/login", securityController.login(), Role.ANYONE);
                 post("/register", securityController.register(), Role.ANYONE);
             });
@@ -27,7 +28,7 @@ public class RouteUser {
         return () -> {
             path("/protected", () -> {
                 before(securityController.authenticate());
-                get("/user_demo", (ctx) -> ctx.json(jsonMapper.createObjectNode().put("msg", "Hello from USER Protected")), Role.USER);
+                get("/user_demo", (ctx) -> ctx.json(jsonMapper.createObjectNode().put("msg", "Hello from USER Protected")), Role.USER, Role.ADMIN);
                 get("/admin_demo", (ctx) -> ctx.json(jsonMapper.createObjectNode().put("msg", "Hello from ADMIN Protected")), Role.ADMIN);
             });
         };
