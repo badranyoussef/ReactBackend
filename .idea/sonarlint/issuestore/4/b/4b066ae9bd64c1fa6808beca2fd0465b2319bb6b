@@ -1,0 +1,10 @@
+
+š	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(‘¢€èúÿÿÿÿJ$90a735d4-c7e4-4b7e-b42a-7d233e02b4bd
+f
+java:S1181+"%Catch Exception instead of Throwable.(À˜§üÿÿÿÿJ$210292bb-9ca1-4fb5-986f-17b477d21e2f
+k	java:S106,"+Replace this use of System.err by a logger.(Ô˜ÒòıÿÿÿÿJ$41b4df0b-4e71-455e-b4d3-04f036b3bf08
+f
+java:S1181>"%Catch Exception instead of Throwable.(À˜§üÿÿÿÿJ$c1d3d76b-1d87-4550-aa24-4942bd11e4f4
+k	java:S106?"+Replace this use of System.err by a logger.(Ô˜ÒòıÿÿÿÿJ$94aad2b2-8d66-4720-9fc7-b71ebfb417a9
+k	java:S106J"+Replace this use of System.out by a logger.(ˆ†ÓÏşÿÿÿÿJ$b590e4f6-9869-4917-a6dd-7a613e30551c
+w	java:S125R"<This block of commented-out lines of code should be removed.(…œÉJ$6694f754-450f-40f5-a17d-383867c50934
